@@ -17,6 +17,7 @@ All purchases go through the `PurchaseAsync` method and you must always `Connect
 /// <param name="itemType">Type of product being requested</param>
 /// <param name="obfuscatedAccountId">Specifies an optional obfuscated string that is uniquely associated with the user's account in your app.</param>
 /// <param name="obfuscatedProfileId">Specifies an optional obfuscated string that is uniquely associated with the user's profile in your app.</param>
+/// <param name="subOfferToken"></param>
 /// <param name="cancellationToken">Cancel the request.</param>
 /// <returns>Purchase details</returns>
 /// <exception cref="InAppBillingPurchaseException">If an error occurs during processing</exception>
@@ -87,6 +88,8 @@ If you are on Android you must also now provide functionality to allow users to 
 * iOS: Optional, only obfuscatedAccountId is used at this time. See [https://developer.apple.com/documentation/storekit/skmutablepayment/1506088-applicationusername](ApplicationUsername) on the payment.
 * Android: Optional, see [https://developer.android.com/reference/com/android/billingclient/api/BillingFlowParams.Builder](Android documentation) for more info
 
+#### subOfferToken
+* Android: If your subscription is set up using basePlans, this is the OfferToken for the basePlan you wish to purchase. You can also pass the OfferToken for a specific offer here. Find the OfferToken via the `GetProductInfoAsync` method in the resulting `InAppBillingProduct.AndroidExtras.SubscriptionOfferDetails[x].OfferToken`.
 
 
 <= Back to [Table of Contents](README.md)

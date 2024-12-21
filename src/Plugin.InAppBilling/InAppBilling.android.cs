@@ -233,19 +233,19 @@ namespace Plugin.InAppBilling
         /// <param name="purchaseTokenOfOriginalSubscription">Purchase token of original subscription</param>
         /// <param name="prorationMode">Proration mode (1 - ImmediateWithTimeProration, 2 - ImmediateAndChargeProratedPrice, 3 - ImmediateWithoutProration, 4 - Deferred)</param>
         /// <returns>Purchase details</returns>
-        public override async Task<InAppBillingPurchase> UpgradePurchasedSubscriptionAsync(string newProductId, string purchaseTokenOfOriginalSubscription, SubscriptionProrationMode prorationMode = SubscriptionProrationMode.ImmediateWithTimeProration, CancellationToken cancellationToken = default)
+        public override async Task<InAppBillingPurchase> UpgradePurchasedSubscriptionAsync(string newProductId, string purchaseTokenOfOriginalSubscription, SubscriptionProrationMode prorationMode = SubscriptionProrationMode.ImmediateWithTimeProration, string subOfferToken = null, CancellationToken cancellationToken = default)
         {
 
             // If we have a current task and it is not completed then return null.
             // you can't try to purchase twice.
             AssertPurchaseTransactionReady();
 
-            var purchase = await UpgradePurchasedSubscriptionInternalAsync(newProductId, purchaseTokenOfOriginalSubscription, prorationMode, cancellationToken);
+            var purchase = await UpgradePurchasedSubscriptionInternalAsync(newProductId, purchaseTokenOfOriginalSubscription, prorationMode, subOfferToken, cancellationToken);
 
             return purchase;
         }
 
-        async Task<InAppBillingPurchase> UpgradePurchasedSubscriptionInternalAsync(string newProductId, string purchaseTokenOfOriginalSubscription, SubscriptionProrationMode prorationMode, CancellationToken cancellationToken)
+        async Task<InAppBillingPurchase> UpgradePurchasedSubscriptionInternalAsync(string newProductId, string purchaseTokenOfOriginalSubscription, SubscriptionProrationMode prorationMode, string subOfferToken = null, CancellationToken cancellationToken = default)
         {
             var itemType = ProductType.Subs;
 
@@ -273,7 +273,7 @@ namespace Plugin.InAppBilling
                 .SetSubscriptionReplacementMode((int)prorationMode)
                 .Build();
 
-            var t = skuDetails.GetSubscriptionOfferDetails()?.FirstOrDefault()?.OfferToken;
+            var t = subOfferToken ?? skuDetails.GetSubscriptionOfferDetails()?.FirstOrDefault()?.OfferToken;
 
 
             var prodDetails = BillingFlowParams.ProductDetailsParams.NewBuilder()
